@@ -1,0 +1,42 @@
+@use 'myLib';
+
+// body {
+//   cursor: none !important;
+//   a {
+//     cursor: none !important;
+//   }
+//   @media (max-width: 1040px) {
+//     cursor: auto !important;
+//     a {
+//       cursor: pointer !important;
+//     }
+//   }
+// }
+
+.cursor {
+  position: fixed;
+  @include myLib.circle(5px);
+  background-color: red;
+  z-index: 1000;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: .3s transform;
+  &::before {
+    content: '';
+    position: absolute;
+    @include myLib.circle(35px);
+    border: 1px solid red;
+    left: 2px;
+    top: 2px;
+    transform: translate(-50%, -50%);
+  }
+  &.typing {
+    transform: scale(.8);
+  }
+  &.hover {
+    transform: scale(1.5);
+  }
+  @media (max-width: 1040px) {
+    display: none;
+  }
+}
