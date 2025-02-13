@@ -31,7 +31,7 @@ header {
     @extend %position-center;
     .main-heading {
       font: {
-        size: 3rem;
+        size: 3em;
         weight: 900;
       }
       margin-bottom: 20px;
@@ -39,19 +39,22 @@ header {
       letter-spacing: 5px;
     }
     .sub-heading {
-      font-size: 2rem;
+      font-size: 2em;
       font-weight: normal;
       letter-spacing: 7px;
       margin-bottom: 20px;
     }
     .sub-heading2 {
-      font-size: 1.1rem;
+      font-size: .9em;
       font-weight: normal;
       letter-spacing: 1px;
       font-family: sans-serif;
       max-width: 300px;
       margin: auto;
-      line-height: 1.3;
+      line-height: 1.5;
+    }
+    @media (max-width: 600px) {
+      font-size: .9rem;
     }
   }
   .brief {
@@ -114,66 +117,60 @@ main {
     text-transform: uppercase;
     text-align: center;
     margin: 150px auto 100px;
+    line-height: 1.6;
   }
-  nav ul {
-    @extend %list-reset;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 50px 30px;
-    li {
+  nav {
+    @extend %flex-center;
+    ul.articles-list {
+      @extend %list-reset;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 400px));
+      gap: 50px 30px;
       width: 100%;
-      cursor: pointer;
-      a {
-        display: block;
-        text-decoration: none;
-        transition: .3s;
-        box-shadow: 7px 7px 12px 0 rgba(0, 0, 0, .4);
-        cursor: pointer;
+      justify-content: center;
+      li {
         width: 100%;
-        min-height: 430px;
-        &:hover {
-          transform: translateY(-20px) scale(1.05);
-          box-shadow: 15px 20px 15px 0 rgba(0, 0, 0, .3);
-        }
-        &.coming-soon {
+        cursor: pointer;
+        a {
+          display: block;
+          text-decoration: none;
+          transition: .3s;
+          box-shadow: 7px 7px 12px 0 rgba(0, 0, 0, .4);
+          cursor: pointer;
+          width: 100%;
+          min-height: 430px;
+          &:hover {
+            transform: translateY(-20px) scale(1.05);
+            box-shadow: 15px 20px 15px 0 rgba(0, 0, 0, .3);
+          }
           img {
-            filter: blur(5px) brightness(70%);
+            width: 100%;
           }
           article {
+            height: 100%;
+            padding: 20px;
             h5 {
-              color: #777;
-              text-transform: capitalize;
-              &::after {
-                content: '..';
+              font: {
+                size: 1.2rem;
+                weight: 600;
               }
+              letter-spacing: 1px;
+              text-transform: capitalize;
+              margin-bottom: 15px;
+              line-height: 1.4;
             }
             p {
-              color: #777;
+              font-weight: 300;
+              line-height: 1.3;
             }
-          }
-        }
-        img {
-          width: 100%;
-        }
-        article {
-          height: 100%;
-          padding: 20px;
-          h5 {
-            font: {
-              size: 1.2rem;
-              weight: 600;
-            }
-            letter-spacing: 1px;
-            text-transform: capitalize;
-            margin-bottom: 15px;
-            line-height: 1.4;
-          }
-          p {
-            font-weight: 300;
-            line-height: 1.3;
           }
         }
       }
+    }
+  }
+  @media (max-width: 500px) {
+    .main-heading {
+      // font-size: 1.5rem;
     }
   }
 }

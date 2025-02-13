@@ -166,6 +166,7 @@ document.addEventListener('mousemove', (e) => {
   ...document.querySelectorAll('input[type=button]'),
   ...document.querySelectorAll('input[type=submit]'),
   ...document.querySelectorAll('input[type=reset]'),
+  ...document.querySelectorAll('input[type=image]')
 ].forEach((e) => {
   e.addEventListener('mouseenter', () => {
     cursor.classList.add('hover');
@@ -214,3 +215,69 @@ function animateWave() {
 
 // Initialize the animation
 animateWave();
+
+
+//! Displaying the articles in intro.htm //
+
+// a function to display articles
+document.addEventListener('DOMContentLoaded', async function () {
+  // getting the .articles-list
+  const articlesList = document.querySelector('.articles-list');
+  if (!articlesList) {
+    console.warn("🚨 No %c.articles-list%c element found! fetching articles has been stopped.",  
+      `font-family: monospace;
+      font-weight: bold;
+      background-color: #00000050;
+      padding: 2px 4px;
+      border-radius: 3px;`
+      , "");    
+    return;
+  }
+  try {
+    // 1. fetch the all of the articles in the directory
+    const response = await fetch('/posts/');
+    const textResponse = await response.text();
+    // 2. parse the html files
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(textResponse, "text/html");
+    // 3. get all the articles links
+    const links = [...doc.querySelectorAll('a')]
+      .filter(link => link.href.endsWith('htm') || link.href.endsWith('html'));
+    
+    await Promise.all(links.map(async link => {
+      if (link.href.endsWith('htm') || link.href.endsWith('html')) {
+        // 1. fetch the HTML file of the link
+        const articleResponse = await fetch(link.href);
+        const articleText = await articleResponse.text();
+        const articleDoc = parser.parseFromString(articleText, 'text/html');
+        // 2. get <title> and <meta name="description"/>
+        const articleTitle = articleDoc.querySelector('title')?.innerText || 'Untitled Article';
+        const articleDescription = articleDoc.querySelector('meta[name="description"]')?.content || 'No Description Found.';
+        // 3. create a <li> of the articles
+        const articleLi = document.createElement('li');
+        articleLi.innerHTML = `
+          <a href="${link.href}" target="_blank">
+            <img src="static/images/article.jpg" alt="image">
+            <article>
+              <h5>${articleTitle}</h5>
+              <p>${articleDescription}</p>
+            </article>
+          </a>
+        `;
+        articlesList.appendChild(articleLi);
+      }
+    }));
+    // edit the .main-heading in the intro page
+    const mainHeading = document.querySelector('main .main-heading');
+    let liNumber = document.querySelectorAll('.articles-list > li').length;
+    if (mainHeading) {
+      if (liNumber > 0) {
+        mainHeading.innerHTML = `${liNumber < 100 ? liNumber : '+99'} article${liNumber === 1 ? '' : 's'} ${liNumber > 1 ? 'are' : 'is'} ready`;
+      } else {
+        mainHeading.innerHTML = 'no article is ready';
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
